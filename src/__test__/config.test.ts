@@ -106,6 +106,7 @@ const theConfig = {
     id: [1, 30607, 30426, 31531, 31674],
     name: [],
     all: false,
+    expire: true,
   },
   coin: {
     customizeUp: [],

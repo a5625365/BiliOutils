@@ -135,6 +135,8 @@ export const defaultConfig = {
     name: [] as string[],
     // 无视其它礼物配置，投喂所有即将过期礼物
     all: false,
+    // 仅投喂即将过期的礼物
+    expire: true,
   },
   coin: {
     /** 自定义高优先级用户列表 */
