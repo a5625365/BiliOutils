@@ -47,11 +47,9 @@ const theConfig = {
     silver2Coin: true,
     liveSignTask: true,
     addCoins: true,
-    mangaSign: false,
     mangaTask: false,
     shareAndWatch: true,
     supGroupSign: false,
-    liveSendMessage: false,
     judgement: false,
     charging: false,
     getVipPrivilege: false,
@@ -61,7 +59,6 @@ const theConfig = {
     liveRedPack: false,
     liveIntimacy: false,
     bigPoint: false,
-    liveFamine: false,
     batchUnfollow: false,
     activityLottery: false,
     useCouponBp: false,
@@ -86,6 +83,7 @@ const theConfig = {
     insiders: [0, 1],
     anonymous: [0, 1],
     newTrigger: true,
+    async: false,
   },
   log: {
     pushLevel: 'verbose',
@@ -117,9 +115,6 @@ const theConfig = {
     upperAccMatch: false,
     src: ['自定义UP', '特别关注', '关注', '首页推荐', '分区排行'],
   },
-  activity: {
-    liveFamineTime: 400,
-  },
   manga: {
     sign: true,
     buy: false,
@@ -127,16 +122,12 @@ const theConfig = {
     mc: [],
     name: [],
     love: true,
+    guess: false,
   },
   exchangeCoupon: {
     num: 1,
     delay: 2000,
-  },
-  sls: {
-    name: '',
-    description: '',
-    region: 'ap-chengdu',
-    dailyRunTime: '17:30:00-23:40:00',
+    keepAmount: 0,
   },
   lottery: {
     excludeAward: [
@@ -195,9 +186,9 @@ const theConfig = {
     liveHeart: false,
     skipNum: 10,
     isRetryHeart: false,
+    dm: {},
   },
   bigPoint: {
-    epids: [],
     isRetry: 20,
     isWatch: true,
     watchDelay: 40,

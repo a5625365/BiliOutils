@@ -42,8 +42,7 @@ function getCookieString(obj: object) {
   return string.substring(0, string.length - 2 || 0);
 }
 
-export default function getCookie(cookie: string, setCookie: string[] | string) {
-  if (!cookie && cookie !== '') return '';
+export default function getCookie(cookie = '', setCookie: string[] | string) {
   if (isString(setCookie)) setCookie = [setCookie];
   if (!setCookie || setCookie.length === 0) return cookie;
 
@@ -56,7 +55,7 @@ export { getCookie };
 
 export function getCookieItem(cookie: string | undefined, key: string) {
   if (!cookie) return null;
-  const reg = `(?:^|)${key}=([^;]*)(?:;|$)`;
+  const reg = `(?:^| )${key}=([^;]*)(?:;|$)`;
   const r = cookie.match(reg);
   return r ? r[1] : null;
 }
