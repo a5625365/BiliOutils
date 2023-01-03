@@ -343,8 +343,14 @@ async function retryLiveHeart() {
 
 export async function liveIntimacyService() {
   // 获取到可能需要操作的粉丝牌
-  const fansMealList = filterFansMedalList(await getFansMealList()),
-    doneLength = fansMealList.filter(fans => fans.medal?.today_feed > 200).length;
+  const fansMealList = filterFansMedalList(await getFansMealList());
+
+  if (fansMealList.length === 0) {
+    logger.info('今日任务已完成，无需再进行');
+    return;
+  }
+
+  const doneLength = fansMealList.filter(fans => fans.medal?.today_feed > 200).length;
   // 获取到点亮的粉丝牌
   await Promise.allSettled([likeAndShare(fansMealList, doneLength), liveHeart(fansMealList)]);
   return;
