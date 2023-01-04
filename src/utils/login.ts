@@ -14,7 +14,7 @@ export async function scanLogin(filepath?: string) {
     defLogger.info(JSON.stringify(loginInfo, null, 2));
     // 使用 readConfig 不是为了读取配置，而是为了获取配置文件路径
     if (!filepath) {
-      const { readConfig } = await import('@/config/setConfig');
+      const { readConfig } = await import('@/config/utils');
       readConfig();
       filepath = process.env.__BT_CONFIG_PATH__;
     }

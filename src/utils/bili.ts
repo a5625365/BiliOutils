@@ -51,7 +51,7 @@ function getAppSign(
     ts: getUnixTime(),
   };
   // 某些情况下不需要也不能从配置文件中读取
-  params.access_key = params.access_key || require('../config/globalVar')?.TaskConfig.access_key;
+  params.access_key = params.access_key || require('../config')?.TaskConfig.access_key;
   if (!params.access_key) {
     delete params.access_key;
     return getSign(params, appsec, true);

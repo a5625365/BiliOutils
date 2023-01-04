@@ -10,7 +10,7 @@
  * @param author 作者仓库等信息  例：`本通知 By：https://github.com/whyour/qinglong`
  */
 import type { Method } from 'got/dist/source/as-promise/types';
-import { TaskConfig, TaskModule } from '../config/globalVar';
+import { TaskConfig, TaskModule } from '@/config';
 import { conciseNickname } from './bili';
 import { defHttp } from './http';
 import { logger, notPush } from './log';

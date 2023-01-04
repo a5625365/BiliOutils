@@ -7,5 +7,6 @@ module.exports = {
   moduleNameMapper: {
     '@/(.*)$': '<rootDir>/$1',
     '#/(.*)$': '<rootDir>/types/$1',
+    '~/(.*)$': '<rootDir>/task/$1',
   },
 };

@@ -1,4 +1,4 @@
-import { TaskConfig } from '@/config/globalVar';
+import { TaskConfig } from '@/config';
 import { OriginURLs } from '@/constant/biliUri';
 import type { SessionDto, SessionHistoryDto } from '@/dto/session.dto';
 import { vcApi } from './api';

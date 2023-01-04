@@ -2,7 +2,7 @@ import type { FCContext, FCEvent } from '@/types/fc';
 import type { SCFContext, SCFEvent, SLSType } from '@/types';
 import type { SlSOptions } from '@/types/sls';
 import { getPRCDate } from '../pure';
-import { dailyTasks } from '@/task/dailyTask';
+import { dailyTasks } from '~/dailyTask';
 import { JSON5 } from '../json5';
 
 interface Params {

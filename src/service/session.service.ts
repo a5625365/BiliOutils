@@ -1,6 +1,6 @@
 import type { Sessionlist, SessionMessage10Dto } from '@/dto/session.dto';
 import type { SessionHandleType } from '@/types';
-import { TaskModule } from '@/config/globalVar';
+import { TaskModule } from '@/config';
 import { deleteSession, getSession, getSessionHistory, readSession } from '@/net/session.request';
 import { apiDelay, isBoolean, logger, pushIfNotExist } from '@/utils';
 import { User } from './tags.service';

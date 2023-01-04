@@ -2,7 +2,7 @@ import type { SCFEvent, SCFContext } from '@/types/scf';
 import type { SlSOptions } from '@/types/sls';
 import type { Client } from 'tencentcloud-sdk-nodejs/tencentcloud/services/scf/v20180416/scf_client';
 import { getPRCDate, randomDailyRunTime } from '../pure';
-import { TaskConfig } from '@/config/globalVar';
+import { TaskConfig } from '@/config';
 import { logger, _logger } from '../log';
 
 /**

@@ -8,7 +8,7 @@ import type {
   BangumiFollowDto,
 } from '../dto/video.dto';
 import { biliApi } from './api';
-import { TaskConfig } from '../config/globalVar';
+import { TaskConfig } from '../config';
 
 /**
  * 分享视频

@@ -1,4 +1,4 @@
-import type { IdType } from '../types';
+import type { IdType } from '@/types';
 import type {
   CoinBalanceDto,
   CoinHistoryDto,
@@ -10,17 +10,17 @@ import type {
   TagListDto,
   TagsFollowingsDto,
   UserInfoNavDto,
-} from '../dto/user-info.dto';
-import type { ApiBaseProp } from '../dto/bili-base-prop';
-import type { VideoByUpDto } from '../dto/video.dto';
+} from '@/dto/user-info.dto';
+import type { ApiBaseProp } from '@/dto/bili-base-prop';
+import type { VideoByUpDto } from '@/dto/video.dto';
 import { biliApi, accountApi } from './api';
-import { OriginURLs } from '../constant/biliUri';
-import { TaskConfig } from '../config/globalVar';
+import { OriginURLs } from '@/constant/biliUri';
+import { TaskConfig } from '@/config';
 
 /**
  * 登录账号
  */
-export function loginByCookie(): Promise<UserInfoNavDto> {
+export function getNav(): Promise<UserInfoNavDto> {
   return biliApi.get('x/web-interface/nav', {
     headers: {
       Origin: OriginURLs.account,

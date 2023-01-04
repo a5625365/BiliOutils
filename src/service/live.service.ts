@@ -1,5 +1,5 @@
 import type { LiveRoomList } from '@/dto/live.dto';
-import { PendentID } from '@/enums/live-lottery.enum';
+import { PendentID } from '@/enums/live.enum';
 import { getArea, getLiveRoom } from '@/net/live.request';
 import { sleep, logger } from '@/utils';
 

@@ -10,7 +10,7 @@ import {
   unFollow,
 } from '@/net/user-info.request';
 import { updateSession } from './session.service';
-import { TaskConfig } from '@/config/globalVar';
+import { TaskConfig } from '@/config';
 
 const tagLogger = new Logger({ console: 'debug', file: 'warn', push: 'warn' }, 'live');
 

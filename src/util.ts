@@ -11,7 +11,7 @@ import { writeError } from './utils/log/std';
  * 获取配置
  */
 export async function config() {
-  const { getConfigPathFile } = await import('./config/setConfig');
+  const { getConfigPathFile } = await import('./config/utils');
   const configPath = getArg('config') as string;
   try {
     const configs = getConfigPathFile(resolve(process.cwd(), configPath));
@@ -82,7 +82,7 @@ export function runForkSync(
 
 export async function runTask(configs?: ConfigArray, forkPath = './bin/fork', tasks = '') {
   if (!configs) {
-    const { getConfig } = await import('./config/setConfig');
+    const { getConfig } = await import('./config/utils');
     configs = getConfig(true);
   }
   const length = configs.length;

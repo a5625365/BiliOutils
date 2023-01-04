@@ -1,71 +1,23 @@
-import { LiveHeartRuleId } from '../types/LiveHeart';
-import { ApiBaseProp, DoubleMessageProp, PureDataProp } from './bili-base-prop';
-
-/** 直播签到 */
-export interface LiveSignDto extends ApiBaseProp {
-  data: { text: string; hadSignDays: number; specialText: string };
-}
-
-/** 直播签到信息 */
-export interface LiveSignInfoDto extends ApiBaseProp {
-  data: {
-    text: string;
-    hadSignDays: number;
-    specialText: string;
-    status: 0 | 1;
-  };
-}
-
-/** 获取瓜子状态 */
-export interface SilverStatusDto extends ApiBaseProp {
-  data: {
-    /** 银瓜子 */
-    silver: number;
-    /** 金瓜子，现在为电池（数量需要除以 1000，即显示 1000，实际为 1 电池） */
-    gold: number;
-    coin: number; // 硬币
-    coin_2_silver_left: number; //
-    silver_2_coin_left: 1 | 0; // (银瓜子到硬币)
-    status: number;
-    vip: number;
-  };
-}
-
-/** 瓜子换硬币 */
-export interface Silver2CoinDto extends PureDataProp {
-  /**
-   * 0 成功
-   * 403 今日兑换过
-   */
-  code: number;
-  data: {
-    coin: number;
-    gold: number;
-    silver: number;
-    /** eg: Silver2Coin00000000000000000000000 */
-    tid: string;
-  };
-}
+import type { LiveHeartRuleId } from '@/types/LiveHeart';
+import type { ApiBaseProp, DoubleMessageProp, PureDataProp } from './bili-base-prop';
 
 /** 我的钱包 */
-export interface MyWalletDto extends ApiBaseProp {
-  data: {
-    /** 金瓜子，现在为电池（数量需要除以 100，即显示 1000，实际为 10 电池） */
-    gold: number;
-    /** 银瓜子 */
-    silver: number;
-    /** b 币 */
-    bp: string; // 数字字符串，如："0"
-    /** 硬币数 */
-    metal: number;
-    need_use_new_bp: boolean;
-    ios_bp: number; // n * 1000
-    common_bp: number; // n * 1000
-    new_bp: string; // 数字字符串，如："1"
-    /** 可以兑换的电池数量 */
-    bp_2_gold_amount: number; // 如果是普通 bp，则可以兑换的金瓜子数量 = bp * 1000，如果是 ios bp，则数量 = ios_bp * 700
-  };
-}
+export type MyWalletDto = ApiBaseProp<{
+  /** 金瓜子，现在为电池（数量需要除以 100，即显示 1000，实际为 10 电池） */
+  gold: number;
+  /** 银瓜子 */
+  silver: number;
+  /** b 币 */
+  bp: string; // 数字字符串，如："0"
+  /** 硬币数 */
+  metal: number;
+  need_use_new_bp: boolean;
+  ios_bp: number; // n * 1000
+  common_bp: number; // n * 1000
+  new_bp: string; // 数字字符串，如："1"
+  /** 可以兑换的电池数量 */
+  bp_2_gold_amount: number; // 如果是普通 bp，则可以兑换的金瓜子数量 = bp * 1000，如果是 ios bp，则数量 = ios_bp * 700
+}>;
 
 /**
  * b币兑换金瓜子
@@ -132,78 +84,6 @@ export interface FansMedalPanelDto extends ApiBaseProp {
     };
     total_number: number;
     has_medal: number;
-  };
-}
-
-/** 直播礼物背包列表 */
-export interface LiveGiftBagListDto extends ApiBaseProp {
-  data: {
-    list: {
-      bag_id: number;
-      /** 1 辣条 30607 小星星 */
-      gift_id: number;
-      gift_name: string;
-      gift_num: number;
-      gift_type: number;
-      /** 到期时间 unix 时间戳 */
-      expire_at: number;
-      /** 还剩时间 eg：1天 */
-      corner_mark: string;
-      corner_color: string;
-      count_map: { num: number; text: string }[];
-      bind_roomid: number;
-      bind_room_text: string;
-      type: number;
-      // card_image: string;
-      // card_gif: string;
-      // card_id: number;
-      // card_record_id: number;
-      // is_show_send: boolean;
-    }[];
-    time: string;
-  };
-}
-
-/** 赠送礼物后的响应 */
-export interface BagSendResDto extends ApiBaseProp {
-  data: {
-    uid: number;
-    uname: string;
-    guard_level: number;
-    ruid: number;
-    room_id: number;
-    rcost: number;
-    total_coin: number;
-    pay_coin: number;
-    blow_switch: number;
-    send_tips: string;
-    discount_id: number;
-    send_master: null;
-    button_combo_type: number;
-    send_gift_countdown: number;
-    blind_gift: null;
-    fulltext: '';
-    crit_prob: number;
-    price: number;
-    left_num: number;
-    need_num: number;
-    available_num: number;
-    bp_cent_balance: number;
-    gift_list: [
-      {
-        tid: string;
-        gift_id: number;
-        gift_type: number;
-        gift_name: string;
-        gift_num: number;
-        gift_action: string;
-        gift_price: number;
-        coin_type: string;
-        tag_image: string;
-        effect_block: number;
-      },
-    ];
-    send_id: string;
   };
 }
 
@@ -565,3 +445,15 @@ interface MedalInfo {
   targetId: number;
   isLight: number;
 }
+
+/**
+ * 直播心跳
+ */
+export type LiveHeartBeatRes = ApiBaseProp<{
+  /** 60 */
+  heartbeat_interval: number;
+  timestamp: number;
+  secret_rule: [number, number, number, number, number];
+  /** axoaadsffcazxksectbbb */
+  secret_key: string;
+}>;

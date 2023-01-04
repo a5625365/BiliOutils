@@ -17,7 +17,7 @@ process.env.IS_QING_LONG = 'true';
     return await runTask(configs);
   }
   await waitForArgs();
-  const { getConfig } = await import('./config/setConfig');
+  const { getConfig } = await import('./config/utils');
   const configs = getConfig(true);
   return await runTask(configs);
 })();

@@ -1,7 +1,7 @@
-import type { UserInfoNavDto } from '../dto/user-info.dto';
-import { TaskModule } from '../config/globalVar';
-import { loginByCookie } from '../net/user-info.request';
-import { logger } from '../utils/log';
+import type { UserInfoNavDto } from '@/dto/user-info.dto';
+import { TaskModule } from '@/config';
+import { getNav } from '@/net/user-info.request';
+import { logger } from '@/utils/log';
 
 type UserNav = UserInfoNavDto['data'];
 
@@ -11,7 +11,7 @@ function getBCoinBalance(data: UserNav) {
 
 export async function updateNav() {
   try {
-    const { data, message, code } = await loginByCookie();
+    const { data, message, code } = await getNav();
     if (code !== 0) {
       logger.warn(`获取用户信息失败：${code} ${message}`);
       return;

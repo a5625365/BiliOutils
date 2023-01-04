@@ -1,7 +1,7 @@
 import { kaomoji } from '@/constant';
-import { SeedMessageResult } from '@/enums/intimacy.emum';
+import { SeedMessageResult } from '@/enums/dm.emum';
 import { getRandomItem, logger } from '@/utils';
-import * as liveRequest from '../net/live.request';
+import * as liveRequest from '@/net/live.request';
 
 const messageArray = kaomoji.concat('1', '2', '3', '4', '5', '6', '7', '8', '9', '签到', '哈哈');
 

@@ -12,14 +12,14 @@ export const biliTaskArray = [
   ['getVipPrivilege', () => import('./getVipPrivilege')],
   ['useCouponBp', () => import('./useCouponBp')],
   ['matchGame', () => import('./matchGame')],
-  ['giveGift', () => import('./giveGift')],
+  ['giveGift', () => import('./giveGift/giveGift')],
   ['liveIntimacy', () => import('./liveIntimacy')],
   ['batchUnfollow', () => import('./batchUnfollow')],
   ['liveLottery', () => import('./liveLottery')],
   ['liveRedPack', () => import('./liveRedPack')],
   ['dailyBattery', () => import('./dailyBattery')],
   ['activityLottery', () => import('./activityLottery')],
-  ['LiveReservation', () => import('./LiveReservation')],
+  ['LiveReservation', () => import('./liveReservation')],
   ['judgement', () => import('./judgement')],
 ] as const;
 

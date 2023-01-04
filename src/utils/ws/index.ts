@@ -1,5 +1,5 @@
 import { unzipSync } from 'zlib';
-import { OpType } from '@/enums/packet.enum';
+import { OpEnum } from '@/enums/ws.enum';
 import { TextDecoder, TextEncoder } from 'util';
 
 export interface PacketBody<T = any> {
@@ -68,7 +68,7 @@ export function getCertification(json: string) {
   return formatDataView(
     {
       byteOffset: bytes.length,
-      op: OpType.认证,
+      op: OpEnum.认证,
     },
     bytes,
   );
@@ -86,7 +86,7 @@ interface DataViewOptions {
 }
 
 export function formatDataView(
-  { byteOffset, packVer = 1, op = OpType.心跳, seq = 1 }: DataViewOptions = {},
+  { byteOffset, packVer = 1, op = OpEnum.心跳, seq = 1 }: DataViewOptions = {},
   body?: number[],
 ) {
   let totalSize = 16;

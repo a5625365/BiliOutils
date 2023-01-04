@@ -1,3 +1,5 @@
+import { fileURLToPath } from 'node:url';
+import { dirname, resolve } from 'node:path';
 import packageJSON from '../package.json' assert { type: 'json' };
 
 function getCoreJsVersion() {
@@ -28,6 +30,7 @@ const plugins = [
       alias: {
         '@': './src',
         '#': './src/types',
+        '~': './src/task',
       },
     },
   ],
@@ -40,7 +43,10 @@ export function baseConfig(options = {}) {
   const { node = '14' } = options;
 
   if (shouldTransform(node)) {
-    plugins.push('./build/babel/transform-node-core-modules.mjs');
+    // get plugin path ，not use __dirname because it is esm
+    plugins.push(
+      resolve(dirname(fileURLToPath(import.meta.url)), './babel/unprefix-core-modules.mjs'),
+    );
   }
 
   return {

@@ -5,16 +5,11 @@ import type {
   SessionHandleType,
   UserConfig,
 } from '@/types';
-import {
-  DAILY_RUN_TIME,
-  LOTTERY_EXCLUDE,
-  LOTTERY_INCLUDE,
-  LOTTERY_UP_BLACKLIST,
-  TODAY_MAX_FEED,
-} from '@/constant';
+import { DAILY_RUN_TIME, LOTTERY_EXCLUDE, LOTTERY_INCLUDE, LOTTERY_UP_BLACKLIST } from '@/constant';
 import { cloneObject, deepMergeObject, arr2numArr } from '@/utils/pure';
 import { getBiliJct, getUserId } from '@/utils/cookie';
 import { isNumber, isString, isUnDef } from '@/utils/is';
+import { TODAY_MAX_FEED } from '~/liveIntimacy/constant';
 
 type DefaultConfig = typeof defaultConfig;
 export type TheConfig = DefaultConfig;

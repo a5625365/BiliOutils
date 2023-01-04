@@ -1,4 +1,4 @@
-import { ApiBaseProp, ResponseResult } from './bili-base-prop';
+import type { ApiBaseProp, ResponseResult } from './bili-base-prop';
 
 /** 传递视频播放时长 */
 export interface HeartbeatDto extends ApiBaseProp {

@@ -1,4 +1,4 @@
-import { TaskConfig } from '../config/globalVar';
+import { TaskConfig } from '../config';
 import { Sleep, random } from './pure';
 
 /**

@@ -1,4 +1,4 @@
-import { DoubleMessageProp } from './bili-base-prop';
+import type { DoubleMessageProp } from './bili-base-prop';
 
 export interface SessionDto {
   code: number;

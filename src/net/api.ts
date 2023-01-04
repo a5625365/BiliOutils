@@ -1,4 +1,4 @@
-import { TaskConfig } from '@/config/globalVar';
+import { TaskConfig } from '@/config';
 import { baseURLs, RefererURLs } from '../constant/biliUri';
 import { biliHttp, createRequest, defHttp } from '../utils/http';
 

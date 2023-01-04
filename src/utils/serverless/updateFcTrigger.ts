@@ -1,7 +1,7 @@
 import type { SlSOptions } from '@/types/sls';
 import { getPRCDate, randomDailyRunTime } from '../pure';
 import type Client from '@alicloud/fc2';
-import { TaskConfig } from '@/config/globalVar';
+import { TaskConfig } from '@/config';
 import { logger, _logger } from '../log';
 import type { FCContext, FCEvent } from '@/types/fc';
 

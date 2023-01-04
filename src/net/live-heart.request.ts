@@ -1,10 +1,9 @@
-import type { LiveHeartERequest, LiveHeartXRequest } from '../types/LiveHeart';
-import type { LiveHeartEDto } from '../dto/live.dto';
+import type { LiveHeartERequest, LiveHeartXRequest } from '@/types/LiveHeart';
+import type { LiveHeartBeatRes, LiveHeartEDto } from '@/dto/live.dto';
 import { biliHttp, liveApi, liveTraceApi } from './api';
 import { appSignString } from '@/utils/bili';
-import { TaskConfig } from '@/config/globalVar';
+import { TaskConfig } from '@/config';
 import { createUUID, getUnixTime } from '@/utils';
-import { LiveHeartBeatRes } from '@/dto/intimacy.dto';
 
 /**
  * 发送 E 请求

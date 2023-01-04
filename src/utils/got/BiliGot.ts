@@ -1,5 +1,5 @@
 import type { VGotOptions } from '@catlair/node-got';
-import { BiliCookieJar } from '@/config/globalVar';
+import { BiliCookieJar } from '@/config';
 import { VGot } from '@catlair/node-got';
 import { CookieJar } from '../cookie';
 

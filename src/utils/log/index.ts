@@ -1,5 +1,5 @@
 import type { LoggerInitOptions, LoggerOptions, MessageType } from '@/types/log';
-import { TaskConfig, TaskModule } from '@/config/globalVar';
+import { TaskConfig, TaskModule } from '@/config';
 import { defLogger, EmptyLogger, SimpleLogger } from './def';
 import { clearLogs } from '@/utils/log/file';
 import { resolvePath } from '../path';
