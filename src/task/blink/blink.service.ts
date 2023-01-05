@@ -6,7 +6,9 @@ import {
 } from './blink.request';
 import { logger, random } from '@/utils';
 import { eventSwitch, hasCmd } from '@/utils/node';
-import { resolvePathArray } from '@/utils/path';
+import { dirname, resolve } from 'node:path';
+import { existsSync, readdirSync, statSync } from 'node:fs';
+import { VIDEO_EXT } from './constant';
 
 /**
  * 获取链接
@@ -54,12 +56,18 @@ async function clickStopLive() {
 async function startLiveByRtmp(addr: { addr: string; code: string }, timeout: number) {
   const { pushToStream } = await import('@/utils/ffmpeg');
   // 根据 files 轮流推流
-  const files = resolvePathArray([
-    './config/demo.mkv',
-    './config/demo1.mkv',
-    './config/demo2.mkv',
-  ]).sort(() => random() - 0.5);
-  return await pushToStream(files, addr.addr + addr.code, timeout);
+  const sf = () => random(true) - 0.5;
+  const files = await getConfigVideoPaths();
+  if (!files.length) return -1;
+  return await pushToStream(files.sort(sf).sort(sf), addr.addr + addr.code, timeout);
+}
+
+async function getConfigVideoPaths() {
+  const videoPaths = resolve(dirname(process.env.__BT_CONFIG_PATH__), 'video');
+  if (!existsSync(videoPaths) || !statSync(videoPaths).isDirectory()) return [];
+  return readdirSync(videoPaths)
+    .filter(f => VIDEO_EXT.some(e => f.endsWith(e)))
+    .map(f => resolve(videoPaths, f));
 }
 
 export async function linkService() {
@@ -71,7 +79,7 @@ export async function linkService() {
     }
     // 获取推流地址
     const { addr } = (await getLink()) || {};
-    if (!addr) return;
+    if (!addr || !addr.addr || !addr.code) return;
     if (!(await clickStartLive())) return;
     sigintSwitch.on();
     // 开始推流，超时 30 分钟

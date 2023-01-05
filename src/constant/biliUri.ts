@@ -38,6 +38,7 @@ interface UAOption {
   phone?: string;
   build?: string | number;
   channel?: string;
+  osVer?: string;
   os?: string;
 }
 
@@ -46,7 +47,8 @@ export function getAndroidUA({
   phone = 'MI 10 Pro',
   build = '6790300',
   channel = 'xiaomi',
-  os = '10',
+  osVer = '10',
+  os = 'android',
 }: UAOption = {}) {
-  return `Mozilla/5.0 BiliDroid/${version} (bbcallen@gmail.com) os/android model/${phone} mobi_app/android build/${build} channel/${channel} innerVer/${channel} osVer/${os} network/2`;
+  return `Mozilla/5.0 BiliDroid/${version} (bbcallen@gmail.com) os/${os} model/${phone} mobi_app/${os} build/${build} channel/${channel} innerVer/${channel} osVer/${osVer} network/2`;
 }

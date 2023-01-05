@@ -1,4 +1,4 @@
-import type { ReservationDto, ReserveButtonDto } from './reservation.dto';
+import type { ReservationDto, ReserveButtonDto, ReserveRelation } from './reservation.dto';
 import type { ApiBaseProp } from '@/dto/bili-base-prop';
 import { TaskConfig } from '@/config';
 import { OriginURLs } from '@/constant/biliUri';
@@ -50,5 +50,14 @@ export function reserveAttachCardButton(
         origin: OriginURLs.www,
       },
     },
+  );
+}
+
+/**
+ * 获取预约关系
+ */
+export function getReserveRelation(ids: number[]) {
+  return biliApi.get<ReserveRelation>(
+    `x/activity/up/reserve/relation/info?csrf=${TaskConfig.BILIJCT}&ids=${ids.join(',')}}`,
   );
 }

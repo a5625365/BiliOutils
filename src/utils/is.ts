@@ -52,6 +52,22 @@ export function isNumber(val: unknown): val is number {
   return is(val, 'Number');
 }
 
+export function isBigInt(val: unknown): val is bigint {
+  return is(val, 'BigInt');
+}
+
+export function isBigNumber(num: string | number) {
+  return !Number.isSafeInteger(+num);
+}
+
+export function isInteger(val: unknown): val is number {
+  return isNumber(val) && Number.isInteger(val);
+}
+
+export function isSymbol(val: unknown): val is symbol {
+  return is(val, 'Symbol');
+}
+
 export function isPromise<T = any>(val: unknown): val is Promise<T> {
   return is(val, 'Promise') && isObject(val) && isFunction(val.then) && isFunction(val.catch);
 }

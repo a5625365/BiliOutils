@@ -42,3 +42,35 @@ export type ReserveButtonDto = DoubleMessageProp<{
   has_activity: boolean;
   _gt_: number;
 }>;
+
+export type ReserveRelation = ApiBaseProp<{
+  list: Record<number, ReserveRelationItem>;
+}>;
+
+export interface ReserveRelationItem {
+  sid: number;
+  name: string;
+  /** 参与总人数 */
+  total: number;
+  stime: number;
+  etime: number;
+  isFollow: number;
+  state: number;
+  oid: string;
+  type: number;
+  upmid: number;
+  reserveRecordCtime: number;
+  livePlanStartTime: number;
+  upActVisible: number;
+  lotteryType: number;
+  prizeInfo: {
+    jumpUrl: string;
+    text: string;
+  };
+  dynamicId: string;
+  reserveTotalShowLimit: number;
+  desc: string;
+  start_show_time: number;
+  hide?: any;
+  ext: string;
+}

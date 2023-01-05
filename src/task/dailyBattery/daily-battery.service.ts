@@ -72,7 +72,7 @@ async function dailyBattery(lastProgress: Ref<number> & { time: number }) {
       return true;
     }
     default: {
-      if (!status.p) {
+      if (status.p === undefined) {
         logger.warn(`任务进度未知，${JSON.stringify(status)}`);
         return true;
       }
