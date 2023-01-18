@@ -1,4 +1,6 @@
+import { getIp } from '@/net/anon.request';
 import { TaskConfig } from '../config';
+import { logger } from './log';
 import { Sleep, random } from './pure';
 
 /**
@@ -29,4 +31,20 @@ function getDelay(delayTime?: number, delayTime2?: number) {
     return API_DELAY[0] * 1000;
   }
   return random(API_DELAY[0] || 2, API_DELAY[1] || 6) * 1000;
+}
+
+/**
+ * 判断是否支持 ipv6
+ */
+export async function isSupportIpv6() {
+  try {
+    const { data, code, message } = await getIp();
+    if (code === 0) {
+      return data.addr.includes(':');
+    }
+    logger.fatal('获取 IP', code, message);
+  } catch (error) {
+    logger.exception('获取 IP', error);
+  }
+  return false;
 }

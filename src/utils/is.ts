@@ -111,3 +111,11 @@ export function isEmail(val: string): boolean {
 export function isHexString(val: string): boolean {
   return /^[01]+$/.test(val);
 }
+
+export function isIpv4(val: string): boolean {
+  return /^((25[0-5]|2[0-4]\d|[01]?\d\d?)($|(?!\.$)\.)){4}$/.test(val);
+}
+
+export function isIpv6(val: string): boolean {
+  return /^([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}$/.test(val);
+}

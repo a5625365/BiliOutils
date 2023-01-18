@@ -26,18 +26,19 @@ function createFFmpge(input: string, output: string) {
 /**
  * 监听推流
  */
-async function listenPushStream(
-  ffmpeg: ChildProcessWithoutNullStreams,
-  timer?: NodeJS.Timeout | 0,
-) {
+async function listenPushStream(ffmpeg: ChildProcessWithoutNullStreams) {
   const { logger } = await import('../log');
 
   return new Promise<number>((resolve, reject) => {
+    const logs: string[] = [];
     ffmpeg.on('close', code => {
-      timer && clearTimeout(timer);
       logger.debug(`child process exited with code ${code}`);
       if (code === 255) {
         return resolve(255);
+      }
+      // 如果最新的 10 条日志中包含 End of file，则认为推流成功
+      if (logs.some(log => log.includes('End of file'))) {
+        return resolve(0);
       }
       if (code !== 0) {
         return reject(code);
@@ -46,39 +47,45 @@ async function listenPushStream(
     });
 
     // 正常日志输出在 stderr 中？why？
-    ffmpeg.stderr.on('data', data => logger.debug(`ffmpeg out: ${data}`));
+    ffmpeg.stderr.on('data', data => {
+      const log = data.toString();
+      logs.push(log);
+      if (logs.length > 10) logs.shift();
+      logger.debug(`ffmpeg out: ${log}`);
+    });
     ffmpeg.stderr.on('error', data => logger.debug(`ffmpeg err: ${data}`));
   });
 }
 
-export async function pushToStream(input: string[], output: string, timeout: number) {
-  // 计时
-  const time = new Date().getTime();
+export async function pushToStream(inputs: string[], output: string, stopRef: Ref<boolean>) {
+  const { logger } = await import('../log');
+
   // 循环推流，直到 timeout
-  while (timeout > 0) {
+  while (!stopRef.value) {
     const code = await push();
     if (code !== 0) return code;
   }
   return 0;
 
   async function push() {
-    const { logger } = await import('../log');
-    for (const item of input) {
-      logger.debug(`推流视频：【${item}】`);
-      const ffmpeg = createFFmpge(item, output);
-      const timer = setTimeout(() => {
-        ffmpeg.kill();
-        logger.info(`推流时间达到，结束推流`);
-      }, timeout);
+    let code = 0;
+    for (const input of inputs) {
+      logger.debug(`推流视频：【${input}】`);
+      const ffmpeg = createFFmpge(input, output);
+      const timer = setInterval(() => {
+        if (stopRef.value) {
+          ffmpeg.kill();
+          logger.info(`推流时间达到，结束推流`);
+        }
+      }, 5000);
       try {
-        const code = await listenPushStream(ffmpeg, timer);
-        if (code !== 0) return code;
-        timeout = timeout - (new Date().getTime() - time);
+        code = await listenPushStream(ffmpeg);
       } catch (error) {
         logger.error(`推流异常：`, error);
-        return -1;
+      } finally {
+        clearInterval(timer);
       }
     }
-    return 0;
+    return code;
   }
 }

@@ -25,7 +25,7 @@ import { getLiveArea, getLotteryRoomList } from '@/service/live.service';
 import { request } from '@/utils/request';
 import { handleFollowUps } from '@/service/tags.service';
 import { getRedPacketController } from './red-packet.request';
-import { noWinRef, realRisk } from './store';
+import { noWinRef } from './store';
 import type { TagsFollowingsDto } from '@/dto/user-info.dto';
 import { eventSwitch } from '@/utils/node';
 import { PacketCmdEnum, ReturnStatus } from './red-packet.enum';
@@ -125,10 +125,6 @@ async function returnStatusHandle() {
   // 风控处理
   if (riskNum > 0 && riskTotalCount >= riskNum) {
     logger.warn(`疑似风控连续${riskTotalCount}次，停止运行`);
-    return ReturnStatus.退出;
-  }
-  if (realRisk.value) {
-    logger.warn(`已被风控，停止运行`);
     return ReturnStatus.退出;
   }
   if (riskTime[0] > 0 && riskCount >= riskTime[0]) {
@@ -378,9 +374,9 @@ function init() {
   waitting.value = false;
 }
 
-function addRiskCount() {
-  riskCount++;
-  riskTotalCount++;
+function addRiskCount(i = 1) {
+  riskCount + -i;
+  riskTotalCount += i;
 }
 
 function clearRiskCount() {
@@ -403,9 +399,8 @@ function checkRiskWs(body: number | PacketBody<any>) {
         content_segments[1].text,
       )
     ) {
-      logger.warn(`账号已经被风控！！！`);
-      clearWs();
-      realRisk.value = true;
+      logger.warn(`账号将抽奖弹幕发送到了公共频道？`);
+      addRiskCount(5);
     }
   }
 }

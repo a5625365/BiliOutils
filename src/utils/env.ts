@@ -1,5 +1,3 @@
-import type { SLSType } from '@/types';
-
 type ENVType = {
   qinglong: boolean;
   fc: boolean;
@@ -7,7 +5,8 @@ type ENVType = {
   cfc: boolean;
   agc: boolean;
   serverless: boolean;
-  type: SLSType | 'local';
+  docker: boolean;
+  type: ReturnType<typeof getEnvType>;
 };
 
 const ENV_BASE = {
@@ -16,7 +15,11 @@ const ENV_BASE = {
   scf: isSCF(),
   cfc: isCFC(),
   agc: isAGC(),
+  fg: isFG(),
+  docker: isDocker(),
 };
+
+const envType = ['docker', 'scf', 'fc', 'agc', 'cfc', 'fg', 'qinglong'] as const;
 
 export const ENV: ENVType = {
   ...ENV_BASE,
@@ -37,7 +40,7 @@ export function isQingLongPanel() {
  */
 export function isCFC() {
   // @ts-ignore
-  return global.IS_CFC || '__IS_CFC__' === 'true';
+  return (global.IS_CFC || '__IS_CFC__' === 'true') && !isFG();
 }
 
 /**
@@ -45,8 +48,22 @@ export function isCFC() {
  */
 export function isAGC() {
   // @ts-ignore
-  // @TODO: IS_CFC 是因为，代码使用的同一套
-  return global.IS_CFC || '__IS_AGC__' === 'true';
+  return '__IS_AGC__' === 'true';
+}
+
+function isFG() {
+  const keys = Object.keys(process.env);
+  const tags = [
+    'RUNTIME_FSS_REPOSITORY_ROOT',
+    '_APP_SHARE_DIR',
+    'RUNTIME_FUNC_NAME',
+    'RUNTIME_FUNC_VERSION',
+    'RUNTIME_PROJECT_ID',
+    'RUNTIME_INITIALIZER_HANDLER',
+    'RUNTIME_TIMEOUT',
+    'RUNTIME_ROOT',
+  ];
+  return keys.filter(key => tags.includes(key)).length >= 5;
 }
 
 export function setConfigFileName() {
@@ -94,21 +111,13 @@ export function isSCF() {
 }
 
 export function isServerless() {
-  return ENV_BASE.fc || ENV_BASE.scf || ENV_BASE.cfc || ENV_BASE.agc;
+  return ['fc', 'scf', 'cfc', 'agc', 'fg'].some(key => ENV_BASE[key]);
 }
 
-export function getEnvType(): SLSType | 'local' {
-  if (ENV_BASE.scf) {
-    return 'scf';
-  }
-  if (ENV_BASE.fc) {
-    return 'fc';
-  }
-  if (ENV_BASE.agc) {
-    return 'agc';
-  }
-  if (ENV_BASE.cfc) {
-    return 'cfc';
-  }
-  return 'local';
+function isDocker() {
+  return require('fs').existsSync('/.dockerenv');
+}
+
+export function getEnvType() {
+  return envType.find(key => ENV_BASE[key]) || process.platform || 'unknown';
 }

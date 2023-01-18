@@ -1,5 +1,7 @@
 import {
   fetchWebUpStreamAddr,
+  getAnchorTaskCenter,
+  getReceiveReward,
   operationOnBroadcastCode,
   startLive,
   stopLive,
@@ -53,13 +55,13 @@ async function clickStopLive() {
   }
 }
 
-async function startLiveByRtmp(addr: { addr: string; code: string }, timeout: number) {
+async function startLiveByRtmp(addr: string, stopRef: Ref<boolean>) {
   const { pushToStream } = await import('@/utils/ffmpeg');
   // 根据 files 轮流推流
   const sf = () => random(true) - 0.5;
   const files = await getConfigVideoPaths();
   if (!files.length) return -1;
-  return await pushToStream(files.sort(sf).sort(sf), addr.addr + addr.code, timeout);
+  return await pushToStream(files.sort(sf).sort(sf), addr, stopRef);
 }
 
 async function getConfigVideoPaths() {
@@ -70,23 +72,77 @@ async function getConfigVideoPaths() {
     .map(f => resolve(videoPaths, f));
 }
 
+/**
+ * 获取任务是否完成
+ */
+async function getTaskStatus() {
+  try {
+    const { code, data, message } = await getAnchorTaskCenter();
+    if (code !== 0) {
+      logger.fatal('获取任务进度', code, message);
+      return;
+    }
+    const weekTaskInfo = data.taskGroups?.find(t => t.taskGroupId === 2081)?.weekTaskInfo;
+    if (!weekTaskInfo) {
+      logger.error('获取任务进度失败，未找到任务');
+      return;
+    }
+    logger.debug('获取任务进度');
+    return weekTaskInfo.weekDailyTask.isFinished;
+  } catch (error) {
+    logger.exception('获取任务进度', error);
+  }
+}
+
+/**
+ * 初始化
+ */
+function init() {
+  const stopRef = { value: false };
+  // 总超时
+  const timeout = setTimeout(() => (stopRef.value = true), 70 * 60 * 1000);
+  // 任务超时
+  const timer = setInterval(async () => {
+    if (await getTaskStatus()) {
+      stopRef.value = true;
+      clearTimeout(timeout);
+      clearInterval(timer);
+      logger.info('任务已完成');
+    }
+  }, 3 * 70 * 1000);
+  const sigintSwitch = eventSwitch('SIGINT', () =>
+    clickStopLive().finally(() => {
+      clearTimeout(timeout);
+      process.exit(0);
+    }),
+  );
+  return {
+    stopRef,
+    sigintSwitch,
+  };
+}
+
 export async function linkService() {
-  const sigintSwitch = eventSwitch('SIGINT', () => clickStopLive().then(() => process.exit(0)));
+  const { stopRef, sigintSwitch } = init();
+
   try {
     if (!(await hasCmd('ffmpeg'))) {
       logger.error('未安装 ffmpeg');
       return;
     }
     // 获取推流地址
-    const { addr } = (await getLink()) || {};
-    if (!addr || !addr.addr || !addr.code) return;
+    const {
+      addr: { addr, code },
+    } = (await getLink()) || { addr: {} };
+
+    if (!addr || !code) return;
     if (!(await clickStartLive())) return;
+
     sigintSwitch.on();
-    // 开始推流，超时 30 分钟
-    await startLiveByRtmp(addr, 30 * 60 * 1000 + 1000);
+    await startLiveByRtmp(addr + code, stopRef);
     await clickStopLive();
   } catch (error) {
-    logger.error(`直播异常：`, error);
+    logger.exception('直播推流', error);
     await clickStopLive();
   }
   sigintSwitch.off();
@@ -94,5 +150,20 @@ export async function linkService() {
 
 // TODO: 开发中ing
 (async () => {
+  logger.info('开始直播推流');
+  if (await getTaskStatus()) {
+    logger.info('任务已完成');
+    return;
+  }
   await linkService();
+  // 领取
+  await getReceiveReward()
+    .then(({ code, message }) => {
+      if (code !== 0) {
+        logger.fatal(`领取每日直播奖励`, code, message);
+        return;
+      }
+      logger.info(`领取每日直播奖励成功`);
+    })
+    .catch(logger.error);
 })();

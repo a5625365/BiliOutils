@@ -10,3 +10,8 @@ temp/**
 yarn-error.log
 /logs
 /bin
+
+# yarn 
+.yarn-integrity
+.yarn
+.yarnrc.yml

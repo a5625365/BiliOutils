@@ -107,7 +107,7 @@ interface TaskGroup {
    * 2061 限时|周任务
    * 426 新手任务
    */
-  taskGroupId: number;
+  taskGroupId: 426 | 2061 | 2087 | 2081;
   title: string;
   weight: number;
   taskGroupBiz: number;

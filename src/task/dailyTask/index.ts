@@ -28,7 +28,7 @@ export async function dailyTasks<T = unknown>(
     } catch (error) {
       logger.error(`${asyncFun.name}失败: ${error}`);
     } finally {
-      await apiDelay();
+      await apiDelay(200);
     }
   }
 

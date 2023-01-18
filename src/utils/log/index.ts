@@ -32,6 +32,15 @@ export class Logger extends SimpleLogger {
     TaskModule.hasError = true;
   }
 
+  public fatal(str: string, code: number, message: string) {
+    this.warn(`${str}：[${code}] ${message}`);
+  }
+
+  // 异常
+  public exception(str: string, error: any) {
+    this.error(`${str}异常：`, error);
+  }
+
   static setEmoji(useEmoji = true) {
     if (!useEmoji) {
       return;

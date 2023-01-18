@@ -141,9 +141,9 @@ function isMultiUserConfig(config: UserConfig[]) {
 function mapMultiUserConfig(config: ConfigArray) {
   return Array.isArray(config) ? mergeCommon(config).map(map) : [];
 
-  function map(conf: UserConfig) {
+  function map(conf: UserConfig, index: number) {
     if (!isBiliCookie(conf.cookie)) {
-      defLogger.error('配置文件中的 cookie 无效！');
+      defLogger.warn(`配置文件中第${index + 1}为无效 cookie！`);
       return undefined;
     }
     return conf;

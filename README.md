@@ -79,7 +79,6 @@ yarn build
 ├── package.json # npm 包配置文件
 ├── README.md
 ├── rollup.config.ts # rollup 配置文件
-├── serverless.yaml # serverless 配置文件
 ├── src # 源码目录
 │  ├── __test__ # 测试目录
 │  ├── bin # 命令行目录，npm 全局命令
@@ -128,6 +127,6 @@ yarn build
 
 感谢 `JetBrains` 提供优秀的 IDE。
 
-<a href="https://www.jetbrains.com/" target="_blank">
+<a href="https://www.jetbrains.com/zh-cn/community/opensource" target="_blank">
 <img src="https://tva1.sinaimg.cn/large/008eGmZEly1gov9g3tzrnj30u00wj0tn.jpg" width="150"/>
 </a>

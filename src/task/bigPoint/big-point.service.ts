@@ -23,6 +23,7 @@ import {
   random,
 } from '@/utils';
 import { TaskConfig, TaskModule } from '@/config';
+import { FREE_POINT } from './constant';
 
 const bigLogger = new Logger({ console: 'debug', file: 'debug', push: 'warn' }, 'big-point');
 
@@ -333,7 +334,7 @@ async function getPoint() {
 async function printPoint() {
   const todayPoint = await getPoint();
   if (!isDef(todayPoint)) return false;
-  if (todayPoint > 65) {
+  if (todayPoint >= FREE_POINT) {
     logger.info(`今日获取积分【${todayPoint}】√`);
     return true;
   }

@@ -1,29 +1,61 @@
 import * as path from 'path';
 import * as fs from 'fs';
-import { defHttp } from './http';
+import { biliHttp } from './http';
+import { ENV } from './env';
+
+type VersionInfo = {
+  tag_name: string;
+  notice: {
+    common: string[];
+    [key: string]: string[];
+  };
+};
 
 /**
  * 获取最新版本
  */
 async function getLatestVersion() {
   const options = {
-    timeout: 6000,
+    timeout: 10000,
   };
   try {
-    const data = await Promise.any([
-      defHttp.get('https://api.github.com/repos/KudouRan/BiliTools/releases/latest', options),
-      defHttp.get('https://gitee.com/api/v5/repos/KudouRan/BiliTools/releases/latest', options),
+    return await Promise.any([
+      biliHttp.get<VersionInfo>(`https://rum-version.2024666.xyz?name=${ENV.type}`, options),
     ]);
-    return data.tag_name;
-  } catch (error) {
-    return;
+  } catch {
+    return {} as VersionInfo;
   }
+}
+
+async function printNotice(notices: VersionInfo['notice']) {
+  const { logger } = await import('./log');
+  if (notices) {
+    notices.common.forEach(notice => logger.verbose(notice));
+    notices[ENV.type]?.forEach(notice => logger.verbose(notice));
+  }
+}
+
+/**
+ * 上报环境，用于后续开发重心调整
+ */
+async function patchEnv() {
+  biliHttp
+    .get(`https://rum-statistics.2024666.xyz?name=${ENV.type}`, {
+      headers: {
+        referer: 'https://www.bilibili.com',
+      },
+    })
+    .catch(() => undefined);
 }
 
 /**
  * 打印版本
  */
 export async function printVersion() {
+  if (process.env.NODE_ENV === 'development') {
+    return;
+  }
+  patchEnv();
   const { logger } = await import('./log');
   let version = '__BILI_VERSION__';
   // 如果 version 被替换，则直接打印
@@ -41,10 +73,11 @@ export async function printVersion() {
     if (!version) {
       return;
     }
-    const latestTag = await getLatestVersion();
-    if (latestTag && checkVersion(version, latestTag)) {
-      logger.info(`可更新：最新版本【${latestTag}】`);
+    const { tag_name, notice } = await getLatestVersion();
+    if (tag_name && checkVersion(version, tag_name)) {
+      logger.info(`可更新：最新版本【${tag_name}】`);
     }
+    await printNotice(notice);
   } catch {}
 }
 

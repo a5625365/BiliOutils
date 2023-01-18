@@ -6,6 +6,7 @@ import { getArg } from './utils/args';
 import { getDelayTime, random, Sleep } from '@/utils/pure';
 import { clearLogs } from '@/utils/log/file';
 import { writeError } from './utils/log/std';
+import { onExit } from './utils/node';
 
 /**
  * 获取配置
@@ -62,7 +63,12 @@ export function runForkSync(
       },
       detached: true,
     });
+
+    // 退出时杀死子进程
+    const clear = onExit(process, () => child.kill());
+
     child.once('exit', code => {
+      clear();
       if (code === 0) {
         resolve(code);
         return;
@@ -71,10 +77,12 @@ export function runForkSync(
     });
     child.on('message', msg => {
       if (msg === true) {
+        clear();
         resolve(true);
       }
     });
     child.once('error', err => {
+      clear();
       reject(err);
     });
   });

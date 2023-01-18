@@ -25,3 +25,19 @@ export function eventSwitch(event: NodeJS.Signals, listener: (...args: any[]) =>
     off,
   };
 }
+
+/**
+ * 监听所有进程退出事件
+ */
+export function onExit(pro: NodeJS.Process, listener: (...args: any[]) => void) {
+  const thisListener = () => {
+    listener();
+    pro.exit();
+  };
+  const events = ['exit', 'SIGINT', 'SIGUSR1', 'SIGUSR2', 'uncaughtException', 'SIGTERM'];
+  events.forEach(event => pro.on(event, thisListener));
+  // 返回取消监听函数
+  return () => {
+    events.forEach(event => pro.off(event, thisListener));
+  };
+}

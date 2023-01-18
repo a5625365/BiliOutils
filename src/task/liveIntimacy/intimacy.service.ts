@@ -38,6 +38,11 @@ let retryCount = 0,
 export async function getFansMealList(numRef: { total: number; current: number }) {
   const list: FansMedalDto[] = [];
   try {
+    // 先获取一次 第一页，避免获取漏掉牌子
+    const { data } = await liveRequest.getFansMedalPanel(1, 2);
+    if (data.special_list?.length > 0) {
+      list.push(...data.special_list);
+    }
     for (let index = 0; index < MEDAL_LIST_PAGE_COUNT; index++) {
       await apiDelay(200, 600);
       const { code, message, data } = await liveRequest.getFansMedalPanel(
@@ -53,14 +58,13 @@ export async function getFansMealList(numRef: { total: number; current: number }
 
       numRef.total = data.page_info.total_page || 0;
       numRef.current = data.page_info.current_page;
-      list.push(...data.list, ...data.special_list);
+      list.push(...data.special_list, ...data.list);
     }
-
-    return list;
   } catch (error) {
     logger.error(`获取勋章异常：`, error);
-    return list;
   }
+  // list 去重
+  return [...new Map(list.map(t => [t.medal.medal_id, t])).values()];
 }
 
 /**
